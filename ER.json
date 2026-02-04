@@ -1,0 +1,70 @@
+{
+  "schema": {
+    "description": "Hierarchical schema for a gym management system",
+    "tables": [
+      {
+        "name": "Gym",
+        "description": "Stores information about gym locations",
+        "columns": [
+          { "name": "gym_id", "type": "INT", "primary_key": true, "auto_increment": true },
+          { "name": "name", "type": "VARCHAR(100)", "nullable": false },
+          { "name": "address", "type": "VARCHAR(255)", "nullable": false },
+          { "name": "phone_number", "type": "VARCHAR(20)", "nullable": false }
+        ]
+      },
+      {
+        "name": "Member",
+        "description": "Stores information about gym members",
+        "columns": [
+          { "name": "member_id", "type": "INT", "primary_key": true, "auto_increment": true },
+          { "name": "last_name", "type": "VARCHAR(50)", "nullable": false },
+          { "name": "first_name", "type": "VARCHAR(50)", "nullable": false },
+          { "name": "address", "type": "VARCHAR(255)", "nullable": false },
+          { "name": "date_of_birth", "type": "DATE", "nullable": false },
+          { "name": "gender", "type": "VARCHAR(10)", "nullable": false },
+          { "name": "gym_id", "type": "INT", "foreign_key": { "references": "Gym(gym_id)" } }
+        ]
+      },
+      {
+        "name": "Coach",
+        "description": "Stores information about coaches",
+        "columns": [
+          { "name": "coach_id", "type": "INT", "primary_key": true, "auto_increment": true },
+          { "name": "last_name", "type": "VARCHAR(50)", "nullable": false },
+          { "name": "first_name", "type": "VARCHAR(50)", "nullable": false },
+          { "name": "age", "type": "INT", "nullable": false },
+          { "name": "specialty", "type": "VARCHAR(100)", "nullable": false }
+        ]
+      },
+      {
+        "name": "Session",
+        "description": "Stores information about gym sessions",
+        "columns": [
+          { "name": "session_id", "type": "INT", "primary_key": true, "auto_increment": true },
+          { "name": "sport_type", "type": "VARCHAR(100)", "nullable": false },
+          { "name": "schedule", "type": "DATETIME", "nullable": false },
+          { "name": "max_capacity", "type": "INT", "default": 20 },
+          { "name": "gym_id", "type": "INT", "foreign_key": { "references": "Gym(gym_id)" } }
+        ]
+      },
+      {
+        "name": "Session_Coaches",
+        "description": "Links coaches to sessions (junction table)",
+        "columns": [
+          { "name": "session_id", "type": "INT", "foreign_key": { "references": "Session(session_id)" } },
+          { "name": "coach_id", "type": "INT", "foreign_key": { "references": "Coach(coach_id)" } }
+        ],
+        "primary_key": ["session_id", "coach_id"]
+      },
+      {
+        "name": "Registration",
+        "description": "Manages member registrations for sessions (junction table)",
+        "columns": [
+          { "name": "registration_id", "type": "INT", "primary_key": true, "auto_increment": true },
+          { "name": "member_id", "type": "INT", "foreign_key": { "references": "Member(member_id)" } },
+          { "name": "session_id", "type": "INT", "foreign_key": { "references": "Session(session_id)" } }
+        ]
+      }
+    ]
+  }
+}
